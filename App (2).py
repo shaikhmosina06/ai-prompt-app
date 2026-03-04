@@ -1,12 +1,14 @@
 import streamlit as st
 from openai import OpenAI
 
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
 st.set_page_config(page_title="AI Prompt Generator", layout="wide")
 
 st.title("🔥 AI Prompt Generator")
 st.write("Generate AI responses using trendy prompts.")
 
-api_key = st.text_input("Enter your OpenAI API Key", type="password")
+
 
 if api_key:
     client = OpenAI(api_key=api_key)
@@ -59,14 +61,21 @@ st.subheader("✍️ Create Your Own Prompt")
 custom_prompt = st.text_area("Enter your prompt")
 
 if st.button("Generate Custom Prompt"):
-    if api_key and custom_prompt:
+    if user_input:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "user", "content": custom_prompt}
-            ]
+                {"role": "system", "content": "You are a professional AI prompt engineer."},
+                {"role": "user", "content": user_input}
+            ],
+            temperature=0.7
         )
-        st.success("✅ AI Response:")
+
+        st.success(response.choices[0].message.content)
+
+    else:
+        st.warning("Please enter a prompt.")
         st.write(response.choices[0].message.content)
     else:
+
         st.warning("Enter API key and prompt.")
