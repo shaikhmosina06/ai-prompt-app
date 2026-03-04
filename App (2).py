@@ -3,7 +3,7 @@ import requests
 
 st.set_page_config(page_title="AI Prompt Generator", layout="wide")
 
-st.title("🔥 AI Prompt Generator (Free Version)")
+st.title("🔥 AI Prompt Generator")
 st.write("Powered by Hugging Face 🤗")
 
 api_key = st.secrets.get("HUGGINGFACE_API_KEY")
@@ -18,23 +18,61 @@ headers = {
     "Authorization": f"Bearer {api_key}"
 }
 
-def query(payload):
+def query(prompt):
+    payload = {
+        "inputs": prompt,
+        "parameters": {
+            "max_new_tokens": 200,
+            "temperature": 0.7
+        }
+    }
     response = requests.post(API_URL, headers=headers, json=payload)
     return response.json()
 
-prompt = st.text_area("Enter your prompt")
+# -------------------------
+# 🌟 Popular Prompts Section
+# -------------------------
 
-if st.button("Generate"):
-    if prompt:
+st.subheader("🌟 Popular Prompts")
+
+popular_prompts = [
+    "Write a trendy Instagram caption about Goa trip.",
+    "Generate a unique AI startup idea in India.",
+    "Write a short Islamic motivational reminder.",
+    "Improve this resume summary professionally.",
+    "Explain Python loops in simple language."
+]
+
+selected_prompt = st.selectbox("Choose a popular prompt:", popular_prompts)
+
+if st.button("Generate Popular Prompt"):
+    with st.spinner("Generating response..."):
+        result = query(selected_prompt)
+
+    if isinstance(result, list) and "generated_text" in result[0]:
+        st.success("✅ AI Response:")
+        st.write(result[0]["generated_text"])
+    else:
+        st.error("Model is loading or rate limit exceeded. Try again in 20 seconds.")
+
+# -------------------------
+# ✍️ Custom Prompt Section
+# -------------------------
+
+st.subheader("✍️ Create Your Own Prompt")
+
+custom_prompt = st.text_area("Enter your custom prompt")
+
+if st.button("Generate Custom Prompt"):
+    if custom_prompt:
         with st.spinner("Generating response..."):
-            output = query({
-                "inputs": prompt
-            })
+            result = query(custom_prompt)
 
-        if isinstance(output, list):
-            st.success(output[0]["generated_text"])
+        if isinstance(result, list) and "generated_text" in result[0]:
+            st.success("✅ AI Response:")
+            st.write(result[0]["generated_text"])
         else:
-            st.error("Error generating response.")
+            st.error("Model is loading or rate limit exceeded. Try again.")
     else:
         st.warning("Please enter a prompt.")
 
