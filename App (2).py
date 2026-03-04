@@ -76,6 +76,7 @@ if st.button("Generate Custom Prompt"):
     else:
         st.warning("Please enter a prompt.")
         st.write(response.choices[0].message.content)
-    else:
+else:
 
         st.warning("Enter API key and prompt.")
+
