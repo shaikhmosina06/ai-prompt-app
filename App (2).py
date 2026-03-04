@@ -1,6 +1,4 @@
-
-
-       import streamlit as st
+import streamlit as st
 from openai import OpenAI
 
 # Page config
@@ -87,5 +85,6 @@ if st.button("Generate Custom Prompt"):
         st.warning("Please enter a prompt.")
     else:
         st.warning("Please configure your API key.")
+
 
 
