@@ -9,7 +9,7 @@ st.write("Powered by Hugging Face 🤗")
 api_key = st.secrets.get("HUGGINGFACE_API_KEY")
 
 if not api_key:
-    st.error("Please add HUGGINGFACE_API_KEY in Streamlit secrets.")
+    st.error("Please add HUGGINGFACE_API_KEY in Streamlit secrets.") 
     st.stop()
 
 API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
